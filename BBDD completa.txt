@@ -1,0 +1,774 @@
+DROP DATABASE IF EXISTS RED_OJEADORES;
+CREATE DATABASE RED_OJEADORES;
+USE RED_OJEADORES;
+
+-- TABLA DE COMPETICIÓN, EN LA QUE SE PRESENTA LAS LIGAS/COMPETICIONES DE PROCEDENCIA DE LOS JUGADORES
+-- EL ATRIBUTO DIVISION ES PARA SABER EL NIVEL DE LAS LIGAS MENOS CONOCIDAS, PARA LAS COMPETICIONES SERA NULL
+DROP TABLE IF EXISTS COMPETICION;
+CREATE TABLE COMPETICION (
+	Nombre VARCHAR(50) NOT NULL,
+    Zona_Geografica VARCHAR(50) NOT NULL,
+    Division INT(1),
+    PRIMARY KEY (Nombre)
+);
+
+USE RED_OJEADORES;
+DROP TABLE IF EXISTS Jugadores;
+
+CREATE TABLE IF NOT EXISTS Jugadores(
+ID_Jugador INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+Nombre VARCHAR(50) NOT NULL,
+Apellido VARCHAR(50) NOT NULL,
+Competicion VARCHAR(50),
+Edad INT NOT NULL,
+Altura DECIMAL NOT NULL,
+Equipo VARCHAR(50),
+Nacionalidad VARCHAR(50) NOT NULL,
+Posicion VARCHAR(50) NOT NULL,
+Pie_Dominante VARCHAR(50) NOT NULL,
+Fin_contrato DATE NOT NULL,
+Valor_Mercado INT NOT NULL
+);
+
+USE RED_OJEADORES;
+DROP TABLE IF EXISTS Ojeador;
+
+CREATE TABLE IF NOT EXISTS Ojeador(
+ID_Ojeador INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+Nombre_Ojeador VARCHAR(50) NOT NULL,
+Zona_Geografica VARCHAR(50) NOT NULL
+);
+
+USE RED_OJEADORES;
+DROP TABLE IF EXISTS Registro;
+
+CREATE TABLE IF NOT EXISTS Registro(
+ID_Registro INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+ID_Ojeador INT NOT NULL,
+ID_Jugador INT NOT NULL,
+Nombre_Competicion VARCHAR(50) NOT NULL,
+
+FOREIGN KEY(ID_OJEADOR)
+REFERENCES Ojeador (ID_OJEADOR),
+
+FOREIGN KEY(ID_JUGADOR)
+REFERENCES Jugadores (ID_JUGADOR),
+
+FOREIGN KEY(Nombre_Competicion)
+REFERENCES Competicion (Nombre)
+);
+
+USE RED_OJEADORES;
+DROP TABLE IF EXISTS Estadisticas;
+
+CREATE TABLE IF NOT EXISTS Estadisticas(
+ID_Estadisticas INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+ID_Jugador INT, -- d
+Numero_partidos INT, -- d
+Goles INT, -- d
+Asistencias INT,-- d
+Tarjeta_Amarilla INT,-- d
+Tarjeta_Roja INT, -- d
+Recuperaciones INT, -- d
+Pases INT, -- d
+Porteria_Cero INT,
+Goles_Encajados INT,
+Paradas INT,
+Bloqueos_Despejes INT,
+
+FOREIGN KEY(ID_Jugador)
+REFERENCES Jugadores(ID_Jugador)
+);
+
+USE RED_OJEADORES;
+
+-- INSERT de competiciones europeas
+INSERT INTO Competicion(Nombre,Zona_Geografica,Division) VALUES
+("Ligue 1","Francia",1),
+("Premier League","Inglaterra",1),
+("Liga Portugal","Portugal",1),
+("Ligue 2","Francia",2),
+("EFL Championship","Inglaterra",2),
+("Liga Portugal 2","Portugal",2),
+("Champions League","Europa",null);
+
+-- INSERT de competiciones americanas
+INSERT INTO Competicion(Nombre,Zona_Geografica,Division) VALUES
+("LPF","Argentina",1),
+("Primera Nacional","Argentina",2),
+("Liga MX","Mexico",1),
+("Liga de Expansion MX","Mexico",2),
+("MLS","EEUU",1),
+("Copa Libertadores","America del Sur",null);
+
+-- INSERT de competiciones asiaticas
+INSERT INTO Competicion(Nombre,Zona_Geografica,Division) VALUES
+("MBS Pro League","Arabia Saudi",1),
+("Meiji Yasuda J1 League","Japon",1),
+("K League 1","Korea",1),
+("AFC Champions League","Asia",null);
+
+
+USE RED_OJEADORES;
+
+-- Ligue 1
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Alban","Lafont","Ligue 1",23,1.96,"FC Nantes","frances","POR","Diestro",'2024-06-30',14000000),
+("Alexander","Nubel","Ligue 1",25,1.93,"AS Monaco","aleman","POR","Diestro",'2023-06-30',6000000),
+-- DEF
+("Achraf","Hakimi","Ligue 1",23,1.81,"PSG","marroqui","LD","Diestro",'2026-06-30',70000000),
+("Sven","Botman","Ligue 1",22,1.95,"LOSC Lille","neerlandes","DFC","Zurdo",'2025-06-30',30000000),
+-- MC
+("Aurelien","Tchouameni","Ligue 1",22,1.87,"AS Monaco","frances","MCD","Diestro",'2024-06-30',40000000),
+("Lucas","Paqueta","Ligue 1",24,1.80,"Olympique de Lyon","brasileño","MCO","Zurdo",'2025-06-30',35000000),
+-- DEL
+("Jonathan","David","Ligue 1",22,1.80,"LOSC Lille","canadiense","DC","Ambidiestro",'2025-06-30',50000000),
+("Jeremy","Doku","Ligue 1",19,1.73,"Stade Rennais","belga","ED","Diestro",'2025-06-30',22000000);
+
+
+-- Ligue 2
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Maxime","Dupe","Ligue 2",30,1.86,"Touluose","frances","POR","Diestro",'2023-01-21',1000000),
+("Vincent","Demarconnay","Ligue 2",39,1.91,"ParisFC","frances","POR","Diestro",'2022-06-30',6000000),
+-- DEF
+("Maxime","Bernauer","Ligue 2",23,1.78,"ParisFC","frances","DFC","Zurdo",'2025-06-3',5000000),
+("Ismael","Diallo","Ligue 2",25,1.84,"Ajaccio","marfileño","LD","Diestro",'2024-12-1',1000000),
+-- MC
+("John","Bostock","Ligue 2",30,1.84,"Toulouse","ingles","MC","Zurdo",'2022-12-1',5000000),
+("Lamine","Fomba","Ligue 2",24,1.80,"Nimes","frances","MC","Diestro",'2025-06-17',2800000),
+-- DEL
+("Lassine","Sinayoko","Ligue 2",22,1.88,"Auxerre","frances","DC","Diestro",'2023-05-12',800000),
+("Tolu","Arokodare","Ligue 2",21,1.86,"Amiens","nigeriano","DC","Zurdo",'2025-06-11',1000000);
+
+-- Premier League
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Dibu","Martinez","Premier League",29,1.95,"Aston Villa","argentino","POR","Diestro",'2027-06-30',32000000),
+("Jordan","Pickford","Premier League",28,1.85,"Everton","ingles","POR","Zurdo",'2024-06-30',25000000),
+-- DEF
+("Kyle","Walkers","Premier League",28,1.73,"Southampton","ingles","LD","Diestro",'2025-06-30',18000000),
+("Ben","White","Premier League",24,1.86,"Arsenal","ingles","DFC","Diestro",'2026-06-30',40000000),
+-- MC
+("Wilfred","Ndidi","Premier League",25,1.83,"Leicester City","nigeriano","MCD","Diestro",'2024-06-30',60000000),
+("Mateo","Kovacic","Premier League",27,1.76,"Chelsea","croata","MC","Diestro",'2024-06-30',45000000),
+-- DEL
+("Ivan ","Toney","Premier League",26,1.85,"Brentford","ingles","DC","Diestro",'2025-06-30',35000000),
+("Gabriel","Jesus","Premier League",25,1.75,"Manchester City","brasileño","DC","Diestro",'2023-06-30',50000000);
+
+-- EFL Championship
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Paulo","Gazzaniga","EFL Championship",30,1.96,"Fulham","argentino","POR","Diestro",'2023-06-30',3000000),
+("Adam","Daives","EFL Championship",29,1.85,"Sheffield United","gales","POR","Diestro",'2022-06-30',700000),
+-- DEF
+("Dael","Fry","EFL Championship",24,1.90,"Middlesbrough","ingles","DFC","Diestro",'2023-06-30',6000000),
+("Abdul-Rahman","Baba","EFL Championship",27,1.79,"Reading","ghanes","LI","Zurdo",'2022-06-30',2500000),
+-- MC
+("Sander","Berge","EFL Championship",24,1.95,"Sheffield United","noruego","MCD","Diestro",'2024-06-30',18000000),
+("Ravel","Morrison","EFL Championship",29,1.75,"Derby Country","jamaicano","MCO","Diestro",'2022-06-30',500000),
+-- DEL
+("Aleksandar","Mitrovic","EFL Championship",27,1.89,"Fulham","serbio","DC","Diestro",'2026-06-30',18000000),
+("Grady","Diangana","EFL Championship",24,1.80,"West Brom Albion","ingles","EI","Zurdo",'2025-06-30',8000000);
+
+-- Liga Portugal
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Odysseas","Vlachodimos","Liga Portugal",27,1.91,"SL Benfica","griego","POR","Diestro",'2024-06-30',15000000),
+("Antonio","Adan","Liga Portugal",34,1.90,"Sporting CP","español","POR","Zurdo",'2024-06-30',3000000),
+-- DEF
+("Alejandro","Grimaldo","Liga Portugal",26,1.71,"SL Benfica","español","LI","Zurdo",'2023-06-30',20000000),
+("Sebastian","Coates","Liga Portugal",31,1.96,"Sporting CP","uruguayo","DFC","Diestro",'2023-06-30',13000000),
+-- MC
+("Joao","Naval","Liga Portugal",29,1.79,"SL Benfica","portugues","MC","Diestro",'2026-06-30',12000000),
+("Andres","Uribe","Liga Portugal",31,1.82,"FC Oporto","colombiano","MCD","Diestro",'2023-06-30',16000000),
+-- DEL
+("Darwin","Nuñez","Liga Portugal",22,1.87,"SL Benfica","uruguayo","DC","Diestro",'2025-06-30',40000000),
+("Abel","Ruiz","Liga Portugal",22,1.80,"SC Braga","español","DC","Diestro",'2025-06-30',7000000);
+
+-- Liga Portugal 2
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Mile","Svilar","Liga Portugal 2",22,1.89,"SL Benfica B","serbio","POR","Diestro",'2022-07-01',2000000),
+("Gonzalo","Tabuaco","Liga Portugal 2",21,1.88,"CF Estrela Amadora","portugues","POR","Diestro",'2023-06-30',325000),
+-- DEF
+("Pedro","Amaral","Liga Portugal 2",24,1.78,"Rio Ave FC","portugues","LI","Zurdo",'2024-06-30',700000),
+("Tomas","Esteves","Liga Portugal 2",20,1.80,"FC Porto B","portugues","LD","Diestro",'2024-06-30',2250000),
+-- MC
+("Vladan","Danilovic","Liga Portugal 2",22,1.83,"CD Nacional","bosnio","MCD","Diestro",'2024-06-30',500000),
+("Cher","Ndour","Liga Portugal 2",17,1.90,"SL Benfica B","italinao","MC","Ambidiestro",'2023-06-30',750000),
+-- DEL
+("Henrique","Araujo","Liga Portugal 2",20,1.80,"SL Benfica B","portugues","DC","Diestro",'2024-06-30',1000000),
+("Umaro","Embalo","Liga Portugal 2",20,1.70,"SL Benfica B","portugues","ED","Zurdo",'2024-06-30',1500000);
+
+-- Champions League
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Juan","Musso","Champions League",27,1.91,"Atalanta","argentino","POR","Diestro",'2025-06-30',20000000),
+("Gianluigi","Donnarumma","Champions League",23,1.96,"Paris SG","italiano","POR","Diestro",'2026-06-30',65000000),
+-- DEF
+("Ibrahima","Konate","Champions League",22,1.94,"Liverpool","frances","DFC","Diestro",'2026-06-30',30000000),
+("Jules","Kounde","Champions League",23,1.78,"Sevilla FC","frances","DFC","Diestro",'2024-06-30',60000000),
+-- MC
+("Manuel","Locatelli","Champions League",24,1.85,"Juventus","italiano","MCD","Diestro",'2023-06-30',35000000),
+("Dani","Parejo","Champions League",33,1.82,"Villareal","español","MC","Diestro",'2024-06-30',9000000),
+-- DEL
+("Karim","Benzema","Champions League",34,1.84,"Real Madrid","frances","DC","Ambidiestro",'2023-06-30',25000000),
+("Erling","Haaland","Champions League",21,1.94,"Borussia Dortmund","neerlandes","DC","Zurdo",'2024-06-30',150000000);
+
+-- LPF Argentina
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Franco","Armani","LPF",35,1.89,"CA River Plate","argentino","POR","Diestro",'2024-12-31',5000000),
+("Lucas","Chaves","LPF",26,1.78,"AA Argentinos Juniors","argentino","POR","Diestro",'2025-12-31',3500000),
+-- DEF
+("Gaston","Avila","LPF",20,1.82,"CA Boca Juniors","argentino","DFC","Zurdo",'2024-12-31',5000000),
+("Paulo","Diaz","LPF",27,1.78,"CA River Plate","chileno","DFC","Diestro",'2024-12-31',7000000),
+-- MC
+("Giuliano","Galoppo","LPF",22,1.79,"Club Atlético Banfield","argentino","MC","Diestro",'2023-12-31',6000000),
+("Agustin","Palavecino","LPF",25,1.79,"CA River Plate","argentino","MCO","Diestro",'2024-12-31',6000000),
+-- DEL
+("Julian","Alvarez","LPF",22,1.70,"CA River Plate","argentino","DC","Diestro",'2022-07-07',23000000),
+("Exequiel","Zeballos","LPF",19,1.74,"CA Boca Juniors","argentino","EI","Diestro",'2025-12-31',5000000);
+
+-- Primera Nacional
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Dario","Sand","Primera Nacional",34,1.80,"CA San Martin","argentino","POR","Diestro",'2022-12-31',100000),
+("Javier","Bustillos","Primera Nacional",25,1.86,"All Boys","argentino","POR","Diestro",'2022-12-31',10000),
+-- DEF
+("Luciano","Balbi","Primera Nacional",33,1.73,"Brown Adrogue","argentino","LI","Zurdo",'2022-12-31',100000),
+("Martin","Ortega","Primera Nacional",22,1.83,"Quilmes","argentino","LD","Diestro",'2023-12-31',250000),
+-- MC
+("Esteban","Gonzalez","Primera Nacional",31,1.79,"Gimnasia y Esgrima","uruguayo","MD","Ambidiestro",'2022-12-31',200000),
+("Leonel","Alvarez","Primera Nacional",27,1.79,"Nueva Chicago","argentino","MI","Diestro",'2022-12-31',10000),
+-- DEL
+("Matias","Alustiza","Primera Nacional",37,1.67,"Santamarina","argentino","DC","Diestro",'2022-12-31',100000),
+("Alan","Balbi","Primera Nacional",29,1.78,"Agropecuario","argentino","ED","Diestro",'2022-12-31',10000);
+
+-- Liga MX
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Oscar", "Ustari", "Liga MX", 35, 1.86, "Pachuca", "argentino", "POR", "Diestro", '2022-01-22', 1000000),
+("Esteban", "Andrada", "Liga MX", 31, 1.91, "Monterrey", "argentino", "POR", "Diestro", '2024-06-28', 4000000),
+-- DEF
+("Cesar", "Montes", "Liga MX", 25, 1.89, "Monterrey", "argentino", "DFC", "Zurdo", '2025-06-21', 7000000),
+("Erik", "Vera", "Liga MX", 30, 1.79, "Queretaro", "mexicano", "LD", "Diestro", '2024-1-14', 800000),
+-- MC
+("Ivan", "Ochoa", "Liga MX", 25, 1.82, "FC Juarez", "mexicano", "MC", "Zurdo", '2023-6-17', 5000000),
+("Guido", "Pizarro", "Liga MX", 32, 1.87, "Tigres", "argentino", "MCD", "Diestro", '2024-06-7', 3500000),
+-- DC
+("Diego", "Rolan", "Liga MX", 29, 1.83, "FC Juarez", "uruguayo", "DC", "Diestro", '2024-05-11', 2000000),
+("Florian", "Thauvin", "Liga MX", 29, 1.80, "Tigres", "frances", "EXT", "Diestro", '2023-06-10',12000000);
+
+-- Liga de Expansion MX
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Jorge","Hernandez","Liga Expansion MX",23,1.91,"CD Leones Negros de la UdeG","mexicano","POR","Diestro",'2022-06-30',700000),
+("Gabino","Espinoza","Liga Expansion MX",31,1.85,"Cimarrones de Sonora","mexicano","POR","Diestro",'2023-06-30',500000),
+-- DEF
+("Santos","Robles","Liga Expansion MX",23,1.91,"Mineros de Zacatecas","mexicano","LD","Diestro",'2022-06-30',800000),
+("Luis","Lopez","Liga Expansion MX",28,1.90,"Correcaminos de la UAT","mexicano","DFC","Diestro",'2023-06-30',800000),
+-- MC
+("Jorge","Sanchez","Liga Expansion MX",29,1.74,"Alebrijes de Oaxaca","mexicano","MC","Diestro",'2024-06-30',800000),
+("Michael","Perez","Liga Expansion MX",29,1.70,"Cancún FC","mexicano","MCD","Diestro",'2022-06-30',800000),
+-- DEL
+("Angel","Lopez","Liga Expansion MX",24,1.91,"Venados FC Yucatan","mexicano","EI","Diestro",'2022-06-30',700000),
+("Pavel","Perez","Liga Expansion MX",23,1.91,"CD Tapatio","mexicano","EI","Diestro",'2022-06-30',700000);
+
+-- Copa Libertadores
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+("Brayan","Cortes","Copa Libertadores",27,1.86,"Colo Colo","chileno","POR","Diestro",'2022-12-31',2000000),
+("Renato","Solis","Copa Libertadores",24,1.87,"Sporting Cristal","peruano","POR","Diestro",'2023-12-31',450000),
+-- DEF
+("Paulo","Diaz","Copa Libertadores",27,1.78,"River Plate","chileno","DFC","Derecho",'2024-12-31',7000000),
+("Joaquin","Piquerez","Copa Libertadores",23,1.85,"Palmeiras","uruguayo","LI","Izquierdo",'2025-12-31',3000000),
+-- MC
+("Danilo","Da Silva","Copa Libertadores",20,1.77,"Palmeiras","brasileño","MC","Zurdo",'2026-12-31',22000000),
+("Juan Fernando","Quintero","Copa Libertadores",29,1.69,"CA River Plate","colombiano","MCO","Zurdo",'2022-12-31',6000000),
+-- DEL
+("Gabriel","Barbosa","Copa Libertadores",25,1.78,"Flamengo","brasileño","DC","Zurdo",'2024-12-31',26000000),
+("Julian","Alvarez","Copa Libertadores",22,1.70,"River Plate","argentino","DC","Diestro",'2022-07-07',23000000);
+
+-- MLS
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Matt","Turner","MLS",27,1.91,"New England Revolution","estadounidense","POR","Diestro",'2022-07-01',5000000),
+("Andre","Blake","MLS",31,1.93,"Philadelphia Union","jamaicano","POR","Diestro",'2024-12-31',3000000),
+-- DEF
+("Miles","Robinson","MLS",25,1.88,"Atlanta United FC","estadounidense","DFC","Diestro",'2023-12-31',5000000),
+("Carlos","Salcedo","MLS",28,1.88,"Toronto FC","mexicano","DFC","Diestro",'2024-12-31',5000000),
+-- MC
+("Thiago","Almada","MLS",20,1.71,"Atlanta United FC","argentino","MCO","Diestro",'2025-12-31',18000000),
+("Alejandro","Pozuelo","MLS",30,1.72,"Toronto FC","español","MCO","Ambidiestro",'2024-12-31',8000000),
+-- DEL
+("Raul","Ruidiaz","MLS",31,1.69,"Seattle Sounders FC","peruano","DC","Diestro",'2024-12-31',8000000),
+("Josef","Martinez","MLS",28,1.72,"Atlanta United FC","venezolano","DC","Diestro",'2023-12-31',12500000);
+
+-- MBS Pro League
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Marcelo", "Grohe", "MBS Pro League", 35, 1.89, "Al-Ittihad", "brasilenho", "POR", "Diestro", '2023-01-22', 1000000),
+("Iago", "Herrerin", "MBS Pro League", 34, 1.85, "Al-Raed", "espanhol", "POR", "Diestro", '2024-06-10', 800000),
+-- DEF
+("Ezgjan", "Alioski", "MBS Pro League", 30, 1.79, "Al-Ahli", "macedonio", "LI", "Zurdo", '2025-06-20', 6500000),
+("Ahmed", "Hegazy", "MBS Pro League", 31, 1.89, "AL-Ittihad", "egipcio", "DFC", "Diestro", '2024-1-10', 4000000),
+-- MC
+("Ever", "Banega", "MBS Pro League", 33, 1.78, "Al-Shabab", "argentino", "MC", "Diestro", '2023-6-10', 3800000),
+("Matheus", "Pereira", "MBS Pro League", 25, 1.80, "Al-Hilal", "brasilenho", "MC", "Diestro", '2024-06-7', 1250000),
+-- DC
+("Luciano", "Vietto", "MBS Pro League", 29, 1.83, "Al-Shabab", "argentino", "DC", "Diestro", '2022-05-18', 5000000),
+("Vincent", "Aboubakar", "MBS Pro League", 30, 1.92, "Al-Nasr", "camerunes", "DC", "Diestro", '2024-06-10',9000000);
+
+-- Meiji Yasuda J1 League
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Sung-ryong","Jung","Meiji Yasuda J1 League",37,1.91,"Kawasaki Front","coreano","POR","Diestro",'2023-1-1',700000),
+("Jakub","Slowik","Meiji Yasuda J1 League",30,1.90,"FC Tokyo","polaco","POR","Diestro",'2023-1-31',850000),
+-- DFC
+("Yasuki","Kimoto","Meiji Yasuda J1 League",28,1.83,"FC Tokyo","japones","DFC","Diestro",'2023-1-31',650000),
+("Takaaki","Shichi","Meiji Yasuda J1 League",28,1.77,"Avispa Fukuoka","japones","LI","Ambidiestro",'2023-1-31',500000),
+-- MC
+("Andres","Iniesta","Meiji Yasuda J1 League",37,1.71,"Visel Kobe","español","MC","Ambidiestro",'2024-1-31',2000000),
+("Yuki","Horigome","Meiji Yasuda J1 League",29,1.68,"Sagan Tosu","japones","MCO","Zurdo",'2023-1-31',300000),
+-- DC
+("Adam","Taggart","Meiji Yasuda J1 League",28,1.77,"Cerezo Osaka","australiano","DC","Diestro",'2023-1-31',850000),
+("Manabu","Saito","Meiji Yasuda J1 League",32,1.69,"Nagoya Grampus","japones","EI","Diestro",'2023-1-31',650000);
+
+-- K League 1
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Jo","Hyeon-woo","K League 1",30,1.89,"Ulsan Hyundai","coreano","POR","Diestro",'2024-06-30',1500000),
+("Song","Bum-keun","K League 1",24,1.94,"Jeonbuk Hyundai Motors","coreano","POR","Zurdo",'2023-06-30',950000),
+-- DFC
+("Hong","Jeong-ho","K League 1",31,1.86,"Jeonbuk Hyundai Motors","coreano","DFC","Diestro",'2024-06-30',1300000),
+("Dave","Bulthuis","K League 1",31,1.92,"Suwon Samsung Bluewings","holandes","DFC","Zurdo",'2023-12-31',1200000),
+-- MC
+("Hwang","In-beon","K League 1",25,1.77,"FC Seoul","coreano","MC","Ambidiestro",'2022-06-30',3000000),
+("Koo","Ja-cheol","K League 1",33,1.84,"Jeju United","coreano","MC","Diestro",'2024-12-31',1300000),
+-- DC
+("Stanislav","Iljutchenko","K League 1",31,1.89,"Jeonbuk Hyundai Motors","ruso","DC","Zurdo",'2022-12-31',1800000),
+("Valeri","Qazaishvili","K League 1",29,1.74,"Ulsan Hyundai","georgiano","DC","Diestro",'2023-12-31',1700000);
+
+-- AFC Champions League
+INSERT INTO Jugadores(Nombre,Apellido,Competicion,Edad,Altura,Equipo,Nacionalidad,Posicion,Pie_Dominante,Fin_Contrato,Valor_Mercado) VALUES
+-- POR
+("Mohammed","Al-Owais","AFC Champions League",30,1.85,"Al-Hilal Riyadh","saudi","POR","Zurdo",'2025-06-30',1200000),
+("Andrew","Redmayne","AFC Champions League",33,1.94,"Sydney FC","australiano","POR","Diestro",'2022-06-30',800000),
+-- DFC
+("Toby","Alderweireld","AFC Champions League",33,1.87,"Al-Duhail SC","belga","DFC","Diestro",'2024-06-30',8000000),
+("Sakai","Hiroki","AFC Champions League",32,1.85,"Urawa Red Diamonds","japones","LD","Diestro",'2023-01-31',3500000),
+-- MC
+("James","Rodriguez","AFC Champions League",30,1.81,"Al-Rayyan SC","colombiano","MCO","Zurdo",'2024-06-30',15000000),
+("Marouane","Felaini","AFC Champions League",34,1.84,"Shandong Taishan","belga","MC","Diestro",'2025-12-31',4500000),
+-- DC
+("Moussa","Marega","AFC Champions League",31,1.83,"Al-Hilal Riyadh","maliense","MP","Diestro",'2024-06-30',9000000),
+("Michael","Olunga","AFC Champions League",28,1.93,"Al-Duhail SC","keniata","DC","Zurdo",'2023-06-30',7000000);
+
+
+USE RED_OJEADORES;
+
+-- PORTEROS
+INSERT INTO Estadisticas(Id_Jugador,Numero_partidos,Goles,Asistencias,Tarjeta_Amarilla,Tarjeta_Roja,Recuperaciones,Pases,Porteria_Cero,Goles_Encajados,Paradas,Bloqueos_Despejes) VALUES
+-- Ligue1
+(1,37,null,null,3,1,null,900,8,41,120,null),
+(2,38,null,null,2,0,null,950,12,37,115,null),
+-- Ligue2
+(9,36,null,null,5,2,null,700,4,43,91,null),
+(10,38,null,null,4,0,null,800,4,52,85,null),
+-- Premier
+(17,38,null,null,1,0,null,1134,15,46,142,null),
+(18,30,null,null,2,0,null,862,5,52,98,null),
+-- Segunda Inglesa
+(25,35,null,null,6,0,null,850,6,55,85,null),
+(26,30,null,null,4,1,null,900,7,45,87,null),
+-- Portugal
+(33,38,null,null,5,0,null,1200,9,42,90,null),
+(34,35,null,null,4,1,null,1050,11,50,77,null),
+(41,30,null,null,6,0,null,750,5,40,67,null),
+(42,37,null,null,7,1,null,810,6,55,75,null),
+-- Champions
+(49,6,null,null,1,0,null,180,2,9,30,null),
+(50,7,null,null,2,0,null,220,3,11,35,null),
+-- argentina 
+(57,36,null,null,8,2,null,870,3,55,90,null),
+(58,37,null,null,5,1,null,791,5,60,81,null),
+(65,30,null,null,2,0,null,700,8,35,80,null),
+(66,38,null,null,4,0,null,835,5,54,86,null),
+-- Liga MX
+(73,38,null,null,5,0,null,750,9,45,110,null),
+(74,38,null,null,3,0,null,800,7,60,91,null),
+-- Liga Expansion
+(81,30,null,null,6,0,null,568,3,42,65,null),
+(82,37,null,null,7,1,null,600,5,62,88,null),
+-- Copa Libertadores
+(89,6,null,null,2,0,null,152,3,9,33,null),
+(90,8,null,null,1,0,null,177,4,11,47,null),
+-- Liga MLS
+(97,32,null,null,9,2,null,738,4,50,60,null),
+(98,37,null,null,7,1,null,600,7,62,75,null),
+-- MBS Pro league
+(105,36,null,null,10,2,null,400,3,55,62,null),
+(106,37,null,null,7,1,null,500,5,61,73,null),
+-- Meiji
+(113,32,null,null,2,0,null,502,9,32,61,null),
+(114,36,null,null,7,2,null,650,3,55,70,null),
+-- K league
+(121,37,null,null,8,1,null,701,8,56,73,null),
+(122,33,null,null,7,0,null,666,4,60,75,null),
+-- AFC Champions
+(129,7,null,null,2,0,null,131,2,10,25,null),
+(130,9,null,null,0,0,null,240,6,4,35,null);
+
+
+-- DEFENSAS
+INSERT INTO Estadisticas(ID_Jugador, Numero_partidos, Goles, Asistencias, Tarjeta_Amarilla, Tarjeta_Roja, Recuperaciones, Pases, Porteria_Cero, Goles_Encajados, Paradas, Bloqueos_Despejes) VALUES
+-- Ligue 1
+(3,35,3,12,5,0,164,1167,null,null,null,64),
+(4,32,1,4,7,1,189,1456,null,null,null,79),
+-- Ligue 2
+(11,25,0,7,1,0,255,1247,null,null,null,85),
+(12,33,5,12,3,0,145,1112,null,null,null,59),
+-- Premier
+(19,30,1,9,4,0,189,1323,null,null,null,89),
+(20,32,0,7,6,2,196,1585,null,null,null,76),
+-- EFL
+(27,36,6,14,5,0,190,1743,null,null,null,69),
+(28,34,0,9,0,0,365,1754,null,null,null,104),
+-- Liga Portugal
+(35,13,2,8,1,0,89,748,null,null,null,37),
+(36,29,0,3,12,2,212,1272,null,null,null,64),
+-- Liga Portugal 2
+(43,36,1,6,5,1,278,1645,null,null,null,90),
+(44,31,3,1,3,0,191,2449,null,null,null,97),
+-- Champions League
+(51,8,0,0,2,0,46,519,null,null,null,28),
+(52,6,0,1,3,0,35,412,null,null,null,30),
+-- LPF Argentina
+(59,19,0,1,12,1,75,1006,null,null,null,64),
+(60,32,1,0,18,2,135,2713,null,null,null,90),
+-- Primera Nacional
+(67,29,0,1,6,0,134,924,null,null,null,60),
+(68,28,1,0,2,0,110,1113,null,null,null,110),
+-- Liga MX
+(75,23,1,3,8,2,142,1381,null,null,null,34),
+(76,30,2,4,1,0,195,1145,null,null,null,154),
+-- Liga de Expansion MX
+(83,14,1,6,3,0,98,567,null,null,null,54),
+(84,33,0,1,6,1,205,1945,null,null,null,143),
+-- Copa Libertadores
+(91,7,1,0,2,0,74,479,null,null,null,78),
+(92,12,0,4,3,0,112,1004,null,null,null,93),
+-- MLS
+(99,34,0,0,0,0,234,2234,null,null,null,212),
+(100,12,1,3,2,1,104,964,null,null,null,98),
+-- MDS Pro League
+(107,30,1,2,4,0,134,1334,null,null,null,112),
+(108,28,0,1,2,0,102,921,null,null,null,132),
+-- Meiji Yasuda J1 League
+(115,29,4,6,3,1,145,2453,null,null,null,131),
+(116,10,0,1,0,0,134,854,null,null,null,100),
+-- K League 1
+(123,34,1,1,13,2,164,2789,null,null,null,254),
+(124,14,0,2,1,0,93,1154,null,null,null,102),
+-- AFC Champions League
+(131,8,1,2,1,0,78,724,null,null,null,82),
+(132,10,0,3,0,0,101,832,null,null,null,95);
+
+
+-- CENTRO CAMPISTAS
+INSERT INTO estadisticas(ID_Jugador,Numero_partidos,Goles,Asistencias,Tarjeta_Amarilla, Tarjeta_Roja, Recuperaciones, Pases,Porteria_Cero,Goles_Encajados,Paradas,Bloqueos_Despejes)
+VALUES
+-- ligue 1
+(5,32,1,1,11,0,315,1600,null,null,null,150),
+(6,32,8,6,3,0,160,2103,null,null, null,81),
+-- ligue 2
+(13,18,0,2,5,1,52,863,null,null,null,49),
+(14,33,5,9,5,0,92,1832,null,null, null,104),
+-- premier
+(21,19,0,0,4,0,165,929,null,null,null,99),
+(22,22,2,5,4,0,99,1085,null,null,null,114),
+-- efl
+(29,25,1,4,8,1,315,1500,null,null,null,128),
+(30,18,5,3,6,0,83,784,null,null,null,85),
+-- liga portugal
+(37,25,3,3,1,0,67,2017,null,null,null,79),
+(38,31,4,1,5,1,148,1534,null,null,null,123),
+-- liga portugal 2
+(45,13,0,2,3,0,83,724,null,null,null,42),
+(46,15,0,2,4,1,54,362,null,null,null,31),
+-- champions
+(53,7,0,1,0,0,73,122,null,null,null,130),
+(54,11,1,3,2,0,43,306,null,null,null,64),
+-- LPF
+(61,20,2,4,5,4,80,480,null,null,null,183),
+(62,24,4,3,4,3,62,514,null,null,null,96),
+-- Primera Nacional
+(69,13,4,2,5,3,34,145,null,null,null,43),
+(70,8,2,1,4,5,25,103,null,null,null,24),
+-- Liga MX
+(77,25,3,7,3,2,153,547,null,null,null,113),
+(78,21,0,3,12,2,178,453,null,null,null,160),
+-- Liga Expansion
+(85,17,1,6,4,0,146,473,null,null,null,85),
+(86,21,0,3,7,3,163,374,null,null,null,146),
+-- Copa Libertadores
+(93,11,3,6,2,0,53,298,null,null,null,59),
+(94,8,3,1,2,1,21,227,null,null,null,15),
+-- MLS
+(101,23,7,2,3,0,54,474,null,null,null,69),
+(102,21,1,5,4,0,79,834,null,null,null,97),
+-- MBS PRO league
+(109,24,1,5,6,0,43,915,null,null,null,73),
+(110,21,2,10,3,0,58,823,null,null,null,65),
+-- Meiji J1 League
+(117,17,2,6,2,0,55,745,null,null,null,58),
+(118,20,2,0,3,0,49,584,null,null,null,78),
+-- K1 League
+(125,28,3,5,4,0,43,832,null,null,null,78),
+(126,23,2,4,2,1,32,684,null,null,null,91),
+-- AFC Champions
+(133,10,5,3,2,0,39,315,null,null,null,44),
+(134,8,0,2,2,1,62,215,null,null,null,55);
+
+
+-- DELANTEROS
+INSERT INTO Estadisticas(ID_Jugador, Numero_partidos, Goles, Asistencias, Tarjeta_Amarilla, Tarjeta_Roja, Recuperaciones, Pases, Porteria_Cero, Goles_Encajados, Paradas, Bloqueos_Despejes) VALUES
+-- Ligue 1 ->  7 - 8
+(7, 30, 9, 6, 5, 1, 12, 698, null, null, null, null),
+(8, 34, 14, 6, 7, 0, 9, 741, null, null, null, null),
+-- Ligue 2 -> 15 - 16
+(15, 23, 7, 2, 1, 0, 7, 539, null, null, null, null),
+(16, 28, 9, 4, 5, 0, 10, 598, null, null, null, null),
+-- Premier League -> 23 - 24
+(23, 31, 12, 4, 7, 0, 10, 655, null, null, null, null),
+(24, 29, 9, 4, 2, 0, 15, 732, null, null, null, null),
+-- EFL Championship-> 31 - 32
+(31, 7, 1, 0, 0, 0, 2, 37, null, null, null, null),
+(32, 32, 16, 7, 2, 0, 18, 753, null, null, null, null),
+-- Liga Portugal -> 39 - 40
+(39, 31, 22, 13, 1, 0, 6, 1022, null, null, null, null),
+(40, 26, 8, 2, 5, 0, 11, 717, null, null, null, null),
+-- Liga Portugal 2 -> 47 - 48
+(47, 20, 7, 13, 6, 2, 3, 412, null, null, null, null),
+(48, 10, 2, 7, 1, 0, 6, 98, null, null, null, null),
+-- Champions League -> 55 - 56
+(55, 12, 6, 3, 0, 0, 6, 374, null, null, null, null),
+(56, 10, 10, 1, 2, 0, 9, 400, null, null, null, null),
+-- LPF Argentina -> 63 - 64
+(63, 23, 12, 13, 8, 3, 6, 532, null, null, null, null),
+(64, 16, 10, 3, 9, 2, 11, 412, null, null, null, null),
+-- Primera Nacional -> 71 - 72
+(71, 2, 1, 0, 0, 2, 2, 17, null, null, null, null),
+(72, 28, 10, 3, 5, 0, 11, 335, null, null, null, null),
+-- Liga MX -> 79 - 80
+(79, 26, 16, 6, 5, 0, 14, 316, null, null, null, null),
+(80, 28, 9, 12, 1, 0, 11, 412, null, null, null, null),
+-- Liga de Expansion MX -> 87 - 88
+(87, 30, 17, 11, 3, 0, 21, 752, null, null, null, null),
+(88, 29, 12, 12, 5, 0, 15, 839, null, null, null, null),
+-- Copa Libertadores -> 95 - 96
+(95, 6, 1, 0, 1, 0, 6, 21, null, null, null, null),
+(96, 13, 11, 8, 2, 0, 4, 539, null, null, null, null),
+-- MLS -> 103 - 104
+(103, 30, 17, 11, 3, 0, 21, 752, null, null, null, null),
+(104, 29, 12, 12, 5, 0, 15, 839, null, null, null, null),
+-- MDS Pro League -> 111 - 112
+(111, 29, 9, 6, 3, 1, 12, 688, null, null, null, null),
+(112, 34, 18, 7, 2, 0, 11, 841, null, null, null, null),
+-- Meiji Yasuda J1 League -> 119 - 120
+(119, 32, 14, 6, 6, 0, 10, 638, null, null, null, null),
+(120, 30, 12, 5, 2, 0, 15, 731, null, null, null, null),
+-- K League 1 -> 127 - 128
+(127, 31, 20, 13, 1, 0, 6, 922, null, null, null, null),
+(128, 26, 9, 10, 5, 0, 13, 742, null, null, null, null),
+-- AFC Champions League -> 135 - 136
+(135, 7, 3, 2, 2, 1, 6, 74, null, null, null, null),
+(136, 8, 3, 1, 0, 0, 10, 112, null, null, null, null);
+
+USE RED_OJEADORES;
+
+INSERT INTO Ojeador (Nombre_Ojeador, Zona_Geografica) VALUES
+("Antonio Cordon", "Europa"),
+("Monchi", "America"),
+("Leonardo Nascimiento de Araujo", "Asia");
+
+USE RED_OJEADORES;
+
+
+-- EUROPA
+INSERT INTO REGISTRO (ID_Ojeador, ID_Jugador, Nombre_Competicion) VALUES
+-- Ligue 1
+(1, 1, "Ligue 1"),
+(1, 2, "Ligue 1"),
+(1, 3, "Ligue 1"),
+(1, 4, "Ligue 1"),
+(1, 5, "Ligue 1"),
+(1, 6, "Ligue 1"),
+(1, 7, "Ligue 1"),
+(1, 8, "Ligue 1"),
+
+-- Ligue 2
+(1, 9, "Ligue 2"),
+(1, 10, "Ligue 2"),
+(1, 11, "Ligue 2"),
+(1, 12, "Ligue 2"),
+(1, 13, "Ligue 2"),
+(1, 14, "Ligue 2"),
+(1, 15, "Ligue 2"),
+(1, 16, "Ligue 2"),
+
+-- Premier League
+(1, 17, "Premier League"),
+(1, 18, "Premier League"),
+(1, 19, "Premier League"),
+(1, 20, "Premier League"),
+(1, 21, "Premier League"),
+(1, 22, "Premier League"),
+(1, 23, "Premier League"),
+(1, 24, "Premier League"),
+
+-- EFL Championship
+(1, 25, "EFL Championship"),
+(1, 26, "EFL Championship"),
+(1, 27, "EFL Championship"),
+(1, 28, "EFL Championship"),
+(1, 29, "EFL Championship"),
+(1, 30, "EFL Championship"),
+(1, 31, "EFL Championship"),
+(1, 32, "EFL Championship"),
+
+-- Liga Portugal
+(1, 33, "Liga Portugal"),
+(1, 34, "Liga Portugal"),
+(1, 35, "Liga Portugal"),
+(1, 36, "Liga Portugal"),
+(1, 37, "Liga Portugal"),
+(1, 38, "Liga Portugal"),
+(1, 39, "Liga Portugal"),
+(1, 40, "Liga Portugal"),
+
+-- Liga Portugal 2
+(1, 41, "Liga Portugal 2"),
+(1, 42, "Liga Portugal 2"),
+(1, 43, "Liga Portugal 2"),
+(1, 44, "Liga Portugal 2"),
+(1, 45, "Liga Portugal 2"),
+(1, 46, "Liga Portugal 2"),
+(1, 47, "Liga Portugal 2"),
+(1, 48, "Liga Portugal 2"),
+
+-- Champions League
+(1, 49, "Champions League"),
+(1, 50, "Champions League"),
+(1, 51, "Champions League"),
+(1, 52, "Champions League"),
+(1, 53, "Champions League"),
+(1, 54, "Champions League"),
+(1, 55, "Champions League"),
+(1, 56, "Champions League");
+
+-- AMERICA
+INSERT INTO REGISTRO (ID_Ojeador, ID_Jugador, Nombre_Competicion) VALUES
+-- LPF
+(2, 57, "LPF"),
+(2, 58, "LPF"),
+(2, 59, "LPF"),
+(2, 60, "LPF"),
+(2, 61, "LPF"),
+(2, 62, "LPF"),
+(2, 63, "LPF"),
+(2, 64, "LPF"),
+
+-- Primera Nacional
+(2, 65, "Primera Nacional"),
+(2, 66, "Primera Nacional"),
+(2, 67, "Primera Nacional"),
+(2, 68, "Primera Nacional"),
+(2, 69, "Primera Nacional"),
+(2, 70, "Primera Nacional"),
+(2, 71, "Primera Nacional"),
+(2, 72, "Primera Nacional"),
+
+-- Liga MX
+(2, 73, "Liga MX"),
+(2, 74, "Liga MX"),
+(2, 75, "Liga MX"),
+(2, 76, "Liga MX"),
+(2, 77, "Liga MX"),
+(2, 78, "Liga MX"),
+(2, 79, "Liga MX"),
+(2, 80, "Liga MX"),
+
+-- Liga de Expanasion MX
+(2, 81, "Liga de Expansion MX"),
+(2, 82, "Liga de Expansion MX"),
+(2, 83, "Liga de Expansion MX"),
+(2, 84, "Liga de Expansion MX"),
+(2, 85, "Liga de Expansion MX"),
+(2, 86, "Liga de Expansion MX"),
+(2, 87, "Liga de Expansion MX"),
+(2, 88, "Liga de Expansion MX"),
+
+-- Copa Libertadores
+(2, 89, "Copa Libertadores"),
+(2, 90, "Copa Libertadores"),
+(2, 91, "Copa Libertadores"),
+(2, 92, "Copa Libertadores"),
+(2, 93, "Copa Libertadores"),
+(2, 94, "Copa Libertadores"),
+(2, 95, "Copa Libertadores"),
+(2, 96, "Copa Libertadores"),
+
+-- MLS
+(2, 97, "MLS"),
+(2, 98, "MLS"),
+(2, 99, "MLS"),
+(2, 100, "MLS"),
+(2, 101, "MLS"),
+(2, 102, "MLS"),
+(2, 103, "MLS"),
+(2, 104, "MLS");
+
+-- ASIA
+INSERT INTO REGISTRO (ID_Ojeador, ID_Jugador, Nombre_Competicion) VALUES
+-- MBS Pro League7
+(3, 105, "MBS Pro League"),
+(3, 106, "MBS Pro League"),
+(3, 107, "MBS Pro League"),
+(3, 108, "MBS Pro League"),
+(3, 109, "MBS Pro League"),
+(3, 110, "MBS Pro League"),
+(3, 111, "MBS Pro League"),
+(3, 112, "MBS Pro League"),
+
+-- Meiji Yasuda J1 League
+(3, 113, "Meiji Yasuda J1 League"),
+(3, 114, "Meiji Yasuda J1 League"),
+(3, 115, "Meiji Yasuda J1 League"),
+(3, 116, "Meiji Yasuda J1 League"),
+(3, 117, "Meiji Yasuda J1 League"),
+(3, 118, "Meiji Yasuda J1 League"),
+(3, 119, "Meiji Yasuda J1 League"),
+(3, 120, "Meiji Yasuda J1 League"),
+
+-- K League 1
+(3, 121, "K League 1"),
+(3, 122, "K League 1"),
+(3, 123, "K League 1"),
+(3, 124, "K League 1"),
+(3, 125, "K League 1"),
+(3, 126, "K League 1"),
+(3, 127, "K League 1"),
+(3, 128, "K League 1"),
+
+-- AFC Champions League
+(3, 129, "AFC Champions League"),
+(3, 130, "AFC Champions League"),
+(3, 131, "AFC Champions League"),
+(3, 132, "AFC Champions League"),
+(3, 133, "AFC Champions League"),
+(3, 134, "AFC Champions League"),
+(3, 135, "AFC Champions League"),
+(3, 136, "AFC Champions League");
